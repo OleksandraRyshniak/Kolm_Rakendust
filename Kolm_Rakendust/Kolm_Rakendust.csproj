@@ -75,6 +75,12 @@
     <EmbeddedResource Include="form.resx">
       <DependentUpon>form.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="game.resx">
+      <DependentUpon>game.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="math_quiz.resx">
+      <DependentUpon>math_quiz.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="picture_viewer.resx">
       <DependentUpon>picture_viewer.cs</DependentUpon>
     </EmbeddedResource>

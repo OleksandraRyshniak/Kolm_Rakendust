@@ -19,7 +19,7 @@ namespace Kolm_Rakendust
         {
             //InitializeComponent();
             this.Text = "Menu";
-            this.Width = 500;
+            this.Width = 400;
             this.Height = 600;
 
             //Pealkiri
