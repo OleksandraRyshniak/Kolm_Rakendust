@@ -25,7 +25,7 @@ namespace Kolm_Rakendust
 
         Label lbl, lblt, slbl, slbl1, rlbl, rlbl1, ulbl,
             ulbl1, dlbl, dlbl1, s, r, u, d, v1, v2, v3, v4;
-        Button start_btn, end_btn;
+        Button start_btn, end_btn, btn;
         Label time;
         Timer timer1;
         NumericUpDown nud1, nud2, nud3, nud4;
@@ -50,6 +50,15 @@ namespace Kolm_Rakendust
             start_btn.Click += start_btn_Click;
             this.Controls.Add(start_btn);
 
+            btn = new Button();
+            btn.Text = "Tagasi menüüsse";
+            btn.Location = new Point(150, 270);
+            btn.Size = new Size(150, 50);
+            btn.Font = new Font("Arial", 13);
+            btn.Click += btn_close;
+            this.Controls.Add(btn);
+
+
             end_btn = new Button();
             end_btn.Text = "Lõpeta test";
             end_btn.Location = new Point(150, 350);
@@ -63,16 +72,21 @@ namespace Kolm_Rakendust
             timer1.Tick += timer1_Tick;
         }
 
+        private void btn_close(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void end_btn_Click(object sender, EventArgs e)
         {
             timer1.Stop();
             if (CheckTheAnswer())
             {
-                MessageBox.Show("Congratulations! You answered all questions correctly.", "Test Completed");
+                MessageBox.Show("Palju õnne! Sa vastasid kõigile küsimustele õigesti. Test on lõpetatud.");
             }
             else
             {
-                MessageBox.Show("Sorry, some answers are incorrect. Try again!", "Test Completed");
+                MessageBox.Show("Vabandust, mõned vastused on valed. Proovi uuesti! Test on lõpetatud.");
             }
             nud1.Value = 0;
             nud2.Value = 0;
@@ -104,6 +118,7 @@ namespace Kolm_Rakendust
             nud4.Visible = false;
             start_btn.Visible = true;
             end_btn.Visible = false;
+            btn.Visible = true;
         }
 
         private void start_btn_Click(object sender, EventArgs e)
@@ -111,6 +126,7 @@ namespace Kolm_Rakendust
             lbl.Visible = true;
             end_btn.Visible = true;
             start_btn.Visible = false;
+            btn.Visible = false;
             lblt = CreateLabel("Jäänud aeg", new Point(10, 60), new Size(150, 30), new Font("Arial", 15));
             t = 30;
             time = CreateLabel("30 seconds", new Point(170, 60), new Size(150, 30), new Font("Arial", 15));
@@ -171,7 +187,7 @@ namespace Kolm_Rakendust
             if (CheckTheAnswer())
             {
                 timer1.Stop();
-                MessageBox.Show("Sa vastasid kõikidele küsimustele õigesti!„, “Palju õnne!");
+                MessageBox.Show("Sa vastasid kõikidele küsimustele õigesti! Palju õnne!");
                 start_btn.Enabled = true;
             }
             else if (t > 0)
@@ -190,6 +206,12 @@ namespace Kolm_Rakendust
                 nud4.Value = d1 / d2;
                 start_btn.Enabled = true;
             }
+
+            if (t <= 5)
+            {
+                time.ForeColor = Color.Red;
+            }
+            
         }
 
         private Label CreateLabel(string text, Point location, Size size, Font font)
@@ -221,4 +243,3 @@ namespace Kolm_Rakendust
 }
 
 
-//timeLabel.BackColor = Color.Red;
