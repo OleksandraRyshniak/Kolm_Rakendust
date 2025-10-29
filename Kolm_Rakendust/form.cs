@@ -45,7 +45,7 @@ namespace Kolm_Rakendust
             btn1.Location = new Point(100, 130);
             btn1.Size = new Size(200, 40);
             btn1.Click += Btn1_Click;
-            btn1.BackColor = Color.DarkBlue;
+            btn1.BackColor = Color.RoyalBlue;
             btn1.ForeColor = Color.White;
             this.Controls.Add(btn1);
 
@@ -64,7 +64,7 @@ namespace Kolm_Rakendust
             btn2.Location = new Point(100, 220);
             btn2.Size = new Size(200, 40);
             btn2.Click += Btn2_Click;
-            btn2.BackColor = Color.DarkBlue;
+            btn2.BackColor = Color.RoyalBlue;
             btn2.ForeColor = Color.White;
             this.Controls.Add(btn2);
 
@@ -83,7 +83,7 @@ namespace Kolm_Rakendust
             btn3.Location = new Point(100, 310);
             btn3.Size = new Size(200, 40);
             btn3.Click += Btn3_Click;
-            btn3.BackColor = Color.DarkBlue;
+            btn3.BackColor = Color.RoyalBlue;
             btn3.ForeColor = Color.White;
             this.Controls.Add(btn3);
 
@@ -92,6 +92,7 @@ namespace Kolm_Rakendust
             btn4.Text = "Väljapääs";
             btn4.Location = new Point(50, 400);
             btn4.Size = new Size(300, 50);
+            btn4.ForeColor = Color.RoyalBlue;
             btn4.Click += Btn4_Click;
             this.Controls.Add(btn4);
         }

@@ -62,8 +62,6 @@ namespace Kolm_Rakendust
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset
             };
 
-            
-
             for (int i = 0; i < 4; i++)
             {
                 tlp.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));

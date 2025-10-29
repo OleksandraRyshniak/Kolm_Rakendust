@@ -28,8 +28,8 @@ namespace Kolm_Rakendust
         {
             //InitializeComponent();
             this.Text = "Pildi Vaatamise";
-            this.Width = 1000;
-            this.Height = 1000;
+            this.Width = 700;
+            this.Height = 800;
 
             ofd = new OpenFileDialog();
             ofd.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All files (*.*)|*.*";
@@ -46,7 +46,8 @@ namespace Kolm_Rakendust
             btn1.Text = "Näita pilti";
             btn1.Location = new Point(10, 70);
             btn1.Size = new Size(80, 30);
-
+            btn1.BackColor = Color.RoyalBlue;
+            btn1.ForeColor = Color.White;
             btn1.Click += showButton_Click;
             this.Controls.Add(btn1);
 
@@ -54,6 +55,8 @@ namespace Kolm_Rakendust
             btn2.Text = "Puhasta pilt";
             btn2.Location = new Point(100, 70);
             btn2.Size = new Size(80, 30);
+            btn2.BackColor = Color.RoyalBlue;
+            btn2.ForeColor = Color.White;
             btn2.Click += clearButton_Click;
             this.Controls.Add(btn2);
             btn2.Enabled = false;
@@ -62,6 +65,8 @@ namespace Kolm_Rakendust
             btn3.Text = "Muuda taustavärvi";
             btn3.Location = new Point(190, 70);
             btn3.Size = new Size(120, 30);
+            btn3.BackColor = Color.RoyalBlue;
+            btn3.ForeColor = Color.White;
             btn3.Click += backgroundButton_Click;
             this.Controls.Add(btn3);
 
@@ -69,40 +74,41 @@ namespace Kolm_Rakendust
             btn4.Text = "Sule";
             btn4.Location = new Point(320, 70);
             btn4.Size = new Size(80, 30);
+            btn4.BackColor = Color.RoyalBlue;
+            btn4.ForeColor = Color.White;
             btn4.Click += closeButton_Click;
             this.Controls.Add(btn4);
 
             cb = new CheckBox();
             cb.Text = "Venita pilt";
-            cb.Location = new Point(410, 75);
+            cb.Location = new Point(430, 75);
             cb.Font = new Font("Arial", 10);
             cb.CheckedChanged += checkBox_CheckedChanged;
 
             cb1 = new CheckBox();
-            cb1.Text = "1.";
+            cb1.Text = "Pildi peegeldus";
             cb1.Location = new Point(430, 110);
-            cb1.Font = new Font("Arial", 10);
+            cb1.Size = new Size(120, 20);
+            cb1.Font = new Font("Arial", 9);
             cb1.CheckedChanged += AddReflection;
 
             cb2 = new CheckBox();
-            cb2.Text = "2.";
+            cb2.Text = "Pulseerimine";
             cb2.Location = new Point(430, 130);
-            cb2.Font = new Font("Arial", 10);
-            cb2.CheckedChanged += PulseAnimation ;
+            cb2.Font = new Font("Arial", 9);
+            cb2.CheckedChanged += PulseAnimation;
 
             cb3 = new CheckBox();
-            cb3.Text = "3.";
+            cb3.Text = "Lisa raam";
             cb3.Location = new Point(430, 150);
-            cb3.Font = new Font("Arial", 10);
+            cb3.Font = new Font("Arial", 9);
             cb3.CheckedChanged += Border;
-
         }
 
         private void Border(object sender, EventArgs e)
         {
             if (pb == null || pb.Image == null) return;
 
-            // чтобы не добавлять событие повторно
             pb.Paint -= DrawGradientBorder;
 
             if (cb3.Checked)
@@ -110,17 +116,19 @@ namespace Kolm_Rakendust
                 pb.Size = new Size(350, 200);
                 pb.Location = new Point(10, 160);
                 pb.Paint += DrawGradientBorder;
-                pb.Invalidate(); // перерисовать
+                pb.Invalidate(); 
+                cb1.Enabled = false;
+                cb2.Enabled = false;
             }
             else
             {
-                pb.Location = new Point(10, 40);
+                pb.Location = new Point(10, 20);
                 pb.Size = new Size(350, 500);
-                pb.Invalidate(); // обновить без рамки
+                pb.Invalidate(); 
+                cb1.Enabled = true;
+                cb2.Enabled = true;
             }
         }
-
-        // Отдельный метод для отрисовки рамки
         private void DrawGradientBorder(object sender, PaintEventArgs e)
         {
             PictureBox box = sender as PictureBox;
@@ -138,7 +146,6 @@ namespace Kolm_Rakendust
                 }
             }
         }
-
         private void PulseAnimation(object sender, EventArgs e)
         {
             if (pb == null) return;
@@ -167,6 +174,8 @@ namespace Kolm_Rakendust
 
                     pb.Size = new Size(newWidth, newHeight);
                 };
+                cb1.Enabled = false;
+                cb3.Enabled = false;
 
                 pulse.Start();
             }
@@ -181,9 +190,10 @@ namespace Kolm_Rakendust
 
                 pb.Size = new Size(baseWidth, baseHeight);
                 pb.Location = baseLocation;
+                cb1.Enabled = true;
+                cb3.Enabled = true;
             }
         }
-
         private void AddReflection(object sender, EventArgs e)
         {
             if (pb == null || pb.Image == null) return;
@@ -209,6 +219,8 @@ namespace Kolm_Rakendust
                             g.FillRectangle(brush, destRect);
                         }
                     }
+                    cb2.Enabled = false;
+                    cb3.Enabled = false;
                 }
                 pb.Location = new Point(10, 100);
                 pb.Image = reflected; 
@@ -217,6 +229,8 @@ namespace Kolm_Rakendust
             {
                 pb.Location = new Point(10, 10);
                 pb.Image = Image.FromFile(ofd.FileName);
+                cb2.Enabled = true;
+                cb3.Enabled = true;
             }
         }
         private void showButton_Click(object sender, EventArgs e)
@@ -240,7 +254,7 @@ namespace Kolm_Rakendust
                 pb.Size = new Size(350, 500);
                 pb.SizeMode = PictureBoxSizeMode.Zoom;
                 pb.Load(ofd.FileName);
-                pb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                pb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
                 this.Controls.Add(pb);
 
                 this.Controls.Add(cb);
@@ -276,18 +290,32 @@ namespace Kolm_Rakendust
             if (cb.Checked)
             {
                 pb.SizeMode = PictureBoxSizeMode.StretchImage;
-                pb.Size = new Size(700, 300);
-                this.Width = 750;
+                pb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+                pb.Location = new Point(10, 140);
+                cb1.Location = new Point(10, 480);
+                cb1.Size = new Size(120, 20);
+                cb2.Location = new Point(130, 480);
+                cb3.Location = new Point(240, 480);
+                pb.Size = new Size(630, 300);
+                cb1.Enabled = false;
+                cb2.Enabled = false;
+                cb3.Enabled = false;
 
             }
             else
             {
-                pb.Size = new Size(400, 300);
+                pb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+                pb.Location = new Point(10, 40);
+                pb.Size = new Size(400, 500);
                 pb.SizeMode = PictureBoxSizeMode.Zoom;
-                this.Width = 500;
+                cb1.Location = new Point(430, 110);
+                cb2.Location = new Point(430, 130);
+                cb3.Location = new Point(430, 150);
+                cb1.Enabled = true;
+                cb2.Enabled = true;
+                cb3.Enabled = true;
             }
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
 

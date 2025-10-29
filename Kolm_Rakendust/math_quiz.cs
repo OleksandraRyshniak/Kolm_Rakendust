@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,28 +33,34 @@ namespace Kolm_Rakendust
 
         Random randomizer = new Random();
 
+        int score = 0;
+
         public math_quiz()
         {
             InitializeComponent();
 
             this.Text = "Matemaatiline äraarvamismäng";
             this.Width = 500;
-            this.Height = 500;
+            this.Height = 300;
 
-            lbl = CreateLabel("Matemaatiline äraarvamismäng", new Point(10, 20), new Size(500, 30), new Font("Arial", 16));
+            lbl = CreateLabel("Matemaatiline äraarvamismäng", new Point(60, 20), new Size(500, 30), new Font("Arial", 16));
 
             start_btn = new Button();
             start_btn.Text = "Alusta testi";
-            start_btn.Location = new Point(150, 200);
-            start_btn.Size = new Size(150, 50);
+            start_btn.Location = new Point(10, 100);
+            start_btn.Size = new Size(200, 70);
             start_btn.Font = new Font("Arial", 13);
+            start_btn.BackColor = Color.RoyalBlue;
+            start_btn.ForeColor = Color.White;
             start_btn.Click += start_btn_Click;
             this.Controls.Add(start_btn);
 
             btn = new Button();
-            btn.Text = "Tagasi menüüsse";
-            btn.Location = new Point(150, 270);
-            btn.Size = new Size(150, 50);
+            btn.Text = "Sule";
+            btn.Location = new Point(220, 100);
+            btn.Size = new Size(200, 70);
+            btn.BackColor = Color.RoyalBlue;   
+            btn.ForeColor = Color.White;
             btn.Font = new Font("Arial", 13);
             btn.Click += btn_close;
             this.Controls.Add(btn);
@@ -64,8 +71,9 @@ namespace Kolm_Rakendust
             end_btn.Location = new Point(150, 350);
             end_btn.Size = new Size(150, 50);
             end_btn.Font = new Font("Arial", 13);
+            end_btn.BackColor = Color.RoyalBlue;
+            end_btn.ForeColor = Color.White;
             end_btn.Click += end_btn_Click;
-
 
             timer1 = new Timer();
             timer1.Interval = 1000;
@@ -76,10 +84,11 @@ namespace Kolm_Rakendust
         {
             this.Close();
         }
-
         private void end_btn_Click(object sender, EventArgs e)
         {
             timer1.Stop();
+            ScoreAnswers();
+            ColorAnswers();
             if (CheckTheAnswer())
             {
                 MessageBox.Show("Palju õnne! Sa vastasid kõigile küsimustele õigesti. Test on lõpetatud.");
@@ -88,12 +97,14 @@ namespace Kolm_Rakendust
             {
                 MessageBox.Show("Vabandust, mõned vastused on valed. Proovi uuesti! Test on lõpetatud.");
             }
+            this.Width = 500;
+            this.Height = 300;
             nud1.Value = 0;
             nud2.Value = 0;
             nud3.Value = 0;
             nud4.Value = 0;
             time.Text = "30 seconds";
-            lbl.Visible = false;
+
             lblt.Visible = false;
             time.Visible = false;
             slbl.Visible = false;
@@ -116,17 +127,21 @@ namespace Kolm_Rakendust
             d.Visible = false;
             v4.Visible = false;
             nud4.Visible = false;
-            start_btn.Visible = true;
             end_btn.Visible = false;
+
+            start_btn.Visible = true;
+            start_btn.Enabled = true;
             btn.Visible = true;
         }
-
         private void start_btn_Click(object sender, EventArgs e)
         {
+            this.Width = 500;
+            this.Height = 500;
             lbl.Visible = true;
             end_btn.Visible = true;
             start_btn.Visible = false;
             btn.Visible = false;
+            lbl.Location = new Point(10, 20);  
             lblt = CreateLabel("Jäänud aeg", new Point(10, 60), new Size(150, 30), new Font("Arial", 15));
             t = 30;
             time = CreateLabel("30 seconds", new Point(170, 60), new Size(150, 30), new Font("Arial", 15));
@@ -147,7 +162,7 @@ namespace Kolm_Rakendust
             m2 = randomizer.Next(1, m1);
             rlbl = CreateLabel(m1.ToString(), new Point(50, 170), new Size(50, 50), new Font("Arial", 15));
             r = CreateLabel("-", new Point(110, 170), new Size(50, 50), new Font("Arial", 15));
-            rlbl1 = CreateLabel(p2.ToString(), new Point(170, 170), new Size(50, 50), new Font("Arial", 15));
+            rlbl1 = CreateLabel(m2.ToString(), new Point(170, 170), new Size(50, 50), new Font("Arial", 15));
             v2 = CreateLabel("=", new Point(230, 170), new Size(50, 50), new Font("Arial", 15));
             nud2 = CreateNumericUpDown(new Point(290, 170), new Size(100, 50), new Font("Arial", 15));
             nud2.Minimum = -100;
@@ -173,47 +188,69 @@ namespace Kolm_Rakendust
 
             this.Controls.Add(end_btn);
         }
-
         private bool CheckTheAnswer()
         {
-            return (p1 + p2 == nud1.Value) &&
-                   (m1 - m2 == nud2.Value) &&
-                   (u1 * u2 == nud3.Value) &&
-                   (d1 / d2 == nud4.Value);
+            return (nud1.Value == p1 + p2) &&
+                   (nud2.Value == m1 - m2) &&
+                   (nud3.Value == u1 * u2) &&
+                   (nud4.Value == d1 / d2);
         }
+        private void ColorAnswers()
+        {
+            NumericUpDown[] nuds = { nud1, nud2, nud3, nud4 };
+            int[] correctAnswers =
+            {
+                p1 + p2,
+                m1 - m2,
+                u1 * u2,
+                d1 / d2
+            };
 
+            for (int i = 0; i < nuds.Length; i++)
+            {
+                if (nuds[i].Value == correctAnswers[i])
+                {
+                    nuds[i].BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    nuds[i].BackColor = Color.LightCoral;
+                }
+            }
+        }
+        private int ScoreAnswers()
+        {
+            if (nud1.Value == p1 + p2) score+=5;
+            if (nud2.Value == m1 - m2) score+=5;
+            if (nud3.Value == u1 * u2) score+=5;
+            if (nud4.Value == d1 / d2) score+=5;
+            return score;
+        }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (CheckTheAnswer())
-            {
-                timer1.Stop();
-                MessageBox.Show("Sa vastasid kõikidele küsimustele õigesti! Palju õnne!");
-                start_btn.Enabled = true;
-            }
-            else if (t > 0)
+            if (t > 0)
             {
                 t--;
                 time.Text = t + " seconds";
             }
             else
             {
+                ScoreAnswers();
+                ColorAnswers();
                 timer1.Stop();
                 time.Text = "Aeg on otsas!";
-                MessageBox.Show("Sa ei jõudnud õigeks ajaks valmis.„, “Vabandust!");
-                nud1.Value = p1 + p2;
-                nud2.Value = m1 - m2;
-                nud3.Value = u1 * u2;
-                nud4.Value = d1 / d2;
+                MessageBox.Show("Sa ei jõudnud õigeks ajaks valmis. Vabandust!");
                 start_btn.Enabled = true;
+                start_btn.Visible = true;
+                end_btn.Visible = false;
+                btn.Visible = true;
             }
-
             if (t <= 5)
             {
                 time.ForeColor = Color.Red;
             }
             
         }
-
         private Label CreateLabel(string text, Point location, Size size, Font font)
         {
             Label lbl = new Label();
@@ -224,7 +261,6 @@ namespace Kolm_Rakendust
             this.Controls.Add(lbl);
             return lbl;
         }
-
         private NumericUpDown CreateNumericUpDown(Point location, Size size, Font font)
         {
             NumericUpDown nud = new NumericUpDown();
