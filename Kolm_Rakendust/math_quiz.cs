@@ -30,6 +30,7 @@ namespace Kolm_Rakendust
         Label time;
         Timer timer1;
         NumericUpDown nud1, nud2, nud3, nud4;
+        RadioButton cb1, cb2, cb3;
 
         Random randomizer = new Random();
 
@@ -40,14 +41,34 @@ namespace Kolm_Rakendust
             InitializeComponent();
 
             this.Text = "Matemaatiline äraarvamismäng";
-            this.Width = 500;
-            this.Height = 300;
+            this.Width = 450;
+            this.Height = 400;
 
             lbl = CreateLabel("Matemaatiline äraarvamismäng", new Point(60, 20), new Size(500, 30), new Font("Arial", 16));
 
+            cb1 = new RadioButton();
+            cb1.Text = "Lihtne tase";
+            cb1.Location = new Point(10, 60);
+            cb1.Font = new Font("Arial", 11);
+            this.Controls.Add(cb1);
+
+            cb2 = new RadioButton();
+            cb2.Text = "Keskmine tase";
+            cb2.Location = new Point(130, 60);
+            cb2.Font = new Font("Arial", 11);
+            cb2.Size = new Size(130, 30);
+            this.Controls.Add(cb2);
+
+            cb3 = new RadioButton();
+            cb3.Text = "Raske tase";
+            cb3.Location = new Point(270, 60);
+            cb3.Font = new Font("Arial", 11);
+            this.Controls.Add(cb3);
+
+
             start_btn = new Button();
             start_btn.Text = "Alusta testi";
-            start_btn.Location = new Point(10, 100);
+            start_btn.Location = new Point(10, 120);
             start_btn.Size = new Size(200, 70);
             start_btn.Font = new Font("Arial", 13);
             start_btn.BackColor = Color.RoyalBlue;
@@ -57,7 +78,7 @@ namespace Kolm_Rakendust
 
             btn = new Button();
             btn.Text = "Sule";
-            btn.Location = new Point(220, 100);
+            btn.Location = new Point(220, 120);
             btn.Size = new Size(200, 70);
             btn.BackColor = Color.RoyalBlue;   
             btn.ForeColor = Color.White;
@@ -91,18 +112,19 @@ namespace Kolm_Rakendust
             ColorAnswers();
             if (CheckTheAnswer())
             {
-                MessageBox.Show("Palju õnne! Sa vastasid kõigile küsimustele õigesti. Test on lõpetatud.");
+                MessageBox.Show("Palju õnne! Sa vastasid kõigile küsimustele õigesti. Test on lõpetatud.\n Sa said: " + score + " punktid");
             }
             else
             {
-                MessageBox.Show("Vabandust, mõned vastused on valed. Proovi uuesti! Test on lõpetatud.");
+                MessageBox.Show("Vabandust, mõned vastused on valed. Proovi uuesti! Test on lõpetatud.\n Sa said: " + score + " punktid");
             }
-            this.Width = 500;
+            this.Width = 450;
             this.Height = 300;
             nud1.Value = 0;
             nud2.Value = 0;
             nud3.Value = 0;
             nud4.Value = 0;
+            score = 0;
             time.Text = "30 seconds";
 
             lblt.Visible = false;
@@ -129,18 +151,68 @@ namespace Kolm_Rakendust
             nud4.Visible = false;
             end_btn.Visible = false;
 
+            cb1.Visible = true;
+            cb1.Checked = false;
+            cb2.Checked = false;
+            cb2.Visible = true;
+            cb3.Checked = false;
+            cb3.Visible = true;
             start_btn.Visible = true;
             start_btn.Enabled = true;
             btn.Visible = true;
         }
         private void start_btn_Click(object sender, EventArgs e)
-        {
+        {   
             this.Width = 500;
             this.Height = 500;
             lbl.Visible = true;
             end_btn.Visible = true;
             start_btn.Visible = false;
+            cb1.Visible = false;
+            cb2.Visible = false;
+            cb3.Visible = false;    
             btn.Visible = false;
+
+            if (cb1.Checked)
+            {
+                p1 = randomizer.Next(1, 11);
+                p2 = randomizer.Next(1, 11);
+                m1 = randomizer.Next(1, 11);
+                m2 = randomizer.Next(1, m1);
+                u1 = randomizer.Next(1, 11);
+                u2 = randomizer.Next(1, 11);
+                d2 = randomizer.Next(1, 11);
+                d1 = d2 * randomizer.Next(1, 5);
+
+            }
+            else if (cb2.Checked)
+            {
+                p1 = randomizer.Next(1, 21);
+                p2 = randomizer.Next(1, 21);
+                m1 = randomizer.Next(1, 21);
+                m2 = randomizer.Next(1, m1);
+                u1 = randomizer.Next(1, 21);
+                u2 = randomizer.Next(1, 21);
+                d2 = randomizer.Next(1, 21);
+                d1 = d2 * randomizer.Next(1, 11);
+            }
+            else if (cb3.Checked)
+            {
+
+                p1 = randomizer.Next(1, 51);
+                p2 = randomizer.Next(1, 51);
+                m1 = randomizer.Next(1, 51);
+                m2 = randomizer.Next(1, m1);
+                u1 = randomizer.Next(1, 31);
+                u2 = randomizer.Next(1, 31);
+                d2 = randomizer.Next(1, 51);
+                d1 = d2 * randomizer.Next(1, 31);
+            }
+            else
+            {
+                MessageBox.Show("Palun vali raskusaste enne testi alustamist.");
+                return;
+            }
             lbl.Location = new Point(10, 20);  
             lblt = CreateLabel("Jäänud aeg", new Point(10, 60), new Size(150, 30), new Font("Arial", 15));
             t = 30;
@@ -149,42 +221,41 @@ namespace Kolm_Rakendust
             timer1.Start(); 
 
             // Esimene
-            p1 = randomizer.Next(1, 51);
-            p2 = randomizer.Next(1, 51);
             slbl = CreateLabel(p1.ToString(), new Point(50, 110), new Size(50, 50), new Font("Arial", 15));
             s = CreateLabel("+", new Point(110, 110), new Size(50, 50), new Font("Arial", 15));
             slbl1 = CreateLabel(p2.ToString(), new Point(170, 110), new Size(50, 50), new Font("Arial", 15));
             v1 = CreateLabel("=", new Point(230, 110), new Size(50, 50), new Font("Arial", 15));
             nud1 = CreateNumericUpDown(new Point(290, 110), new Size(100, 50), new Font("Arial", 15));
+            nud1.Minimum = 0;
+            nud1.Maximum = 100000;
 
             //Teine
-            m1 = randomizer.Next(1, 51);
-            m2 = randomizer.Next(1, m1);
+
             rlbl = CreateLabel(m1.ToString(), new Point(50, 170), new Size(50, 50), new Font("Arial", 15));
             r = CreateLabel("-", new Point(110, 170), new Size(50, 50), new Font("Arial", 15));
             rlbl1 = CreateLabel(m2.ToString(), new Point(170, 170), new Size(50, 50), new Font("Arial", 15));
             v2 = CreateLabel("=", new Point(230, 170), new Size(50, 50), new Font("Arial", 15));
             nud2 = CreateNumericUpDown(new Point(290, 170), new Size(100, 50), new Font("Arial", 15));
-            nud2.Minimum = -100;
+            nud2.Minimum = -100000;
+            nud2.Maximum = 100000;
 
             //Kolmas
-            u1 = randomizer.Next(2, 13);
-            u2 = randomizer.Next(2, 13);
             ulbl = CreateLabel(u1.ToString(), new Point(50, 230), new Size(50, 50), new Font("Arial", 15));
             u = CreateLabel("*", new Point(110, 230), new Size(50, 50), new Font("Arial", 15));
             ulbl1 = CreateLabel(u2.ToString(), new Point(170, 230), new Size(50, 50), new Font("Arial", 15));
             v3 = CreateLabel("=", new Point(230, 230), new Size(50, 50), new Font("Arial", 15));
             nud3 = CreateNumericUpDown(new Point(290, 230), new Size(100, 50), new Font("Arial", 15));
-            nud3.Maximum = 144; 
+            nud3.Maximum = 100000; 
+            nud3.Minimum = 0;
 
             //Neljas
-            d2 = randomizer.Next(2, 13);
-            d1 = d2 * randomizer.Next(2, 13);
             dlbl = CreateLabel(d1.ToString(), new Point(50, 290), new Size(50, 50), new Font("Arial", 15));
             d = CreateLabel("/", new Point(110, 290), new Size(50, 50), new Font("Arial", 15));
             dlbl1 = CreateLabel(d2.ToString(), new Point(170, 290), new Size(50, 50), new Font("Arial", 15));
             v4 = CreateLabel("=", new Point(230, 290), new Size(50, 50), new Font("Arial", 15));
             nud4 = CreateNumericUpDown(new Point(290, 290), new Size(100, 50), new Font("Arial", 15));
+            nud4.Maximum = 100000;
+            nud4.Minimum = 0;
 
             this.Controls.Add(end_btn);
         }
@@ -239,7 +310,7 @@ namespace Kolm_Rakendust
                 ColorAnswers();
                 timer1.Stop();
                 time.Text = "Aeg on otsas!";
-                MessageBox.Show("Sa ei jõudnud õigeks ajaks valmis. Vabandust!");
+                MessageBox.Show("Sa ei jõudnud õigeks ajaks valmis. Vabandust! \n Sa said: " + score + " punktid");
                 start_btn.Enabled = true;
                 start_btn.Visible = true;
                 end_btn.Visible = false;

@@ -7,16 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace Kolm_Rakendust
 {
+
     public partial class game : Form
     {
+        int timeLeft;
         TableLayoutPanel tlp;
-        Label lbl, clickedlbl, timelbl;
+        Label lbl, clickedlbl, timelbl, label;
         Label fClicked = null;
         Label sClicked = null;
         Timer hidetimer, gametimer;
+        Button start_btn, close_btn, pluss_btn;
+        RadioButton rb1, rb2, rb3;
+        
+        private bool isTimeMode = false;
+
 
         Random randomizer = new Random();
         int seconds = 0;
@@ -30,24 +39,93 @@ namespace Kolm_Rakendust
         {
             InitializeComponent();
             this.Text = "Sarnaste piltide leidmise mäng";
+            this.Width = 420;
+            this.Height = 200;
+
+            label = new Label();
+            label.Text = "Vali mängurežiim ja vajuta 'Alusta Mängu'";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(400, 30);
+            label.Font = new Font("Segoe UI", 13, FontStyle.Bold);
+            this.Controls.Add(label);
+
+            rb1 = new RadioButton
+            {
+                Text = "Tavaline režiim",
+                Location = new Point(20, 70),
+                Size = new Size(130, 30),
+                Font = new Font("Segoe UI", 10, FontStyle.Regular)
+            };
+            this.Controls.Add(rb1);
+
+            rb2 = new RadioButton
+            {
+                Text = "Ajamäng",
+                Location = new Point(150, 70),
+                Size = new Size(100, 30),
+                Font = new Font("Segoe UI", 10, FontStyle.Regular)
+            };
+            this.Controls.Add(rb2);
+
+            rb3 = new RadioButton
+            {
+                Text = "Mäng kahele",
+                Location = new Point(250, 70),
+                Size = new Size(130, 30),
+                Font = new Font("Segoe UI", 10, FontStyle.Regular)
+            };
+            this.Controls.Add(rb3);
+
+            start_btn = new Button
+            {
+                Text = "Alusta Mängu",
+                Location = new Point(40, 110),
+                Size = new Size(150, 40),
+                Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White
+            };
+            start_btn.Click += start_btn_Click;
+            this.Controls.Add(start_btn);
+
+            close_btn = new Button
+            {
+                Text = "Sulge Mäng",
+                Location = new Point(200, 110),
+                Size = new Size(150, 40),
+                Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White
+            };
+            close_btn.Click += close_btn_Click;
+            this.Controls.Add(close_btn);
+
+        }
+
+
+       
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
             this.Width = 550;
-            this.Height = 550;
+            this.Height = 600;
+            timeLeft = 45; 
+            isTimeMode = true;
 
             hidetimer = new Timer();
             hidetimer.Interval = 500;
             hidetimer.Tick += hidetimer_Tick;
 
             gametimer = new Timer();
-            gametimer.Interval = 1000; // 1 секунда
-            gametimer.Tick += gametimer_Tick;
+            gametimer.Interval = 1000;
+            gametimer.Tick += gametimer_Tick1;
             gametimer.Start();
 
             timelbl = new Label
             {
-                Text = "Aeg: 00:00 s",
+                Text = "Aeg: 00:45 s",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Dock = DockStyle.Top,
-                Height = 30,
+                Location = new Point(180, 10),
+                Size = new Size(180, 30),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.LightSteelBlue
             };
@@ -57,7 +135,77 @@ namespace Kolm_Rakendust
             {
                 RowCount = 4,
                 ColumnCount = 4,
-                Dock = DockStyle.Fill,
+                Location = new Point(40, 50),
+                Size = new Size(450, 450),
+                BackColor = Color.CornflowerBlue,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                tlp.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+                tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            }
+
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    lbl = new Label
+                    {
+                        BackColor = Color.BlanchedAlmond,
+                        Dock = DockStyle.Fill,
+                        Margin = new Padding(1),
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        Font = new Font("Webdings", 48, FontStyle.Bold)
+                    };
+
+                    lbl.Click += label1_Click;
+                    tlp.Controls.Add(lbl, col, row);
+                }
+            }
+
+            this.Controls.Add(tlp);
+            AssignIconsToSquares();
+        }
+        private void close_btn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.Width = 550;
+            this.Height = 600;
+            seconds = 0;
+
+            hidetimer = new Timer();
+            hidetimer.Interval = 500;
+            hidetimer.Tick += hidetimer_Tick;
+
+            gametimer = new Timer();
+            gametimer.Interval = 1000;
+            gametimer.Tick += gametimer_Tick;
+            gametimer.Start();
+
+            timelbl = new Label
+            {
+                Text = "Aeg: 00:00 s",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Location = new Point(180, 10),
+                Size = new Size(180, 30),
+                Height = 30,
+
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.LightSteelBlue
+            };
+            this.Controls.Add(timelbl);
+
+            tlp = new TableLayoutPanel
+            {
+                RowCount = 4,
+                ColumnCount = 4,
+                Location = new Point(40, 50),
+                Size = new Size(450, 450),
                 BackColor = Color.CornflowerBlue,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset
             };
@@ -88,13 +236,43 @@ namespace Kolm_Rakendust
             this.Controls.Add(tlp);
             AssignIconsToSquares();
         }
-
+        private void start_btn_Click(object sender, EventArgs e)
+        {
+            if (rb1.Checked)
+            {
+                start_btn.Visible = false;
+                close_btn.Visible = false;
+                rb1.Visible = false;
+                rb2.Visible = false;
+                rb3.Visible = false;
+                label.Visible = false;
+                radioButton1_CheckedChanged(sender, e);
+            }
+            else if (rb2.Checked) 
+            {
+                start_btn.Visible = false;
+                close_btn.Visible = false;
+                rb1.Visible = false;
+                rb2.Visible = false;
+                rb3.Visible = false;
+                label.Visible = false;
+                radioButton2_CheckedChanged(sender, e);
+            }
+            else if (rb3.Checked) { }
+            else
+            {
+                MessageBox.Show("Palun vali raskusaste!");
+            }
+        }
         private void gametimer_Tick(object sender, EventArgs e)
         {
             seconds++;
             int minutes = seconds / 60;
             int sec = seconds % 60;
+
+            timelbl.SuspendLayout();
             timelbl.Text = $"Aeg: {minutes:D2}:{sec:D2} s";
+            timelbl.ResumeLayout();
         }
         private void AssignIconsToSquares()
         {
@@ -132,13 +310,17 @@ namespace Kolm_Rakendust
                 CheckForWinner();
 
 
-                if (fClicked.Text == sClicked.Text)
+                if (fClicked != null && sClicked != null)
                 {
-                    fClicked = null;
-                    sClicked = null;
-                    return;
+                    if (fClicked.Text == sClicked.Text)
+                    {
+                        fClicked = null;
+                        sClicked = null;
+                        return;
+                    }
+
+                    hidetimer.Start();
                 }
-                hidetimer.Start();
             }
         }
         private void hidetimer_Tick(object sender, EventArgs e)
@@ -154,29 +336,102 @@ namespace Kolm_Rakendust
         }
         private void CheckForWinner()
         {
-            // Go through all of the labels in the TableLayoutPanel, 
-            // checking each one to see if its icon is matched
             foreach (Control control in tlp.Controls)
             {
                 Label iconLabel = control as Label;
 
-                if (iconLabel != null)
-                {
-                    if (iconLabel.ForeColor == iconLabel.BackColor)
-                        return;
-                }
+                if (iconLabel != null && iconLabel.ForeColor == iconLabel.BackColor)
+                    return;
             }
 
-            // If the loop didn’t return, it didn't find
-            // any unmatched icons
-            // That means the user won. Show a message and close the form
-            MessageBox.Show("You matched all the icons!", "Congratulations");
-            Close();
+            gametimer.Stop();
+            if (hidetimer != null) hidetimer.Stop();
+
+            MessageBox.Show("Kõik paarid on leitud! Tubli töö!");
+
+            ResetToMenu(); 
         }
 
         private void game_Load(object sender, EventArgs e)
         {
 
         }
+
+        private void gametimer_Tick1(object sender, EventArgs e)
+        {
+            if (timeLeft > 0)
+            {
+                timeLeft--;
+                int minutes = timeLeft / 60;
+                int sec = timeLeft % 60;
+
+                timelbl.Text = $"Aeg: {minutes:D2}:{sec:D2} s";
+            }
+            else
+            {
+                gametimer.Stop();
+                if (hidetimer != null) hidetimer.Stop();
+
+                MessageBox.Show("Aeg sai otsa! Mäng läbi!", "Lõpp");
+
+                ResetToMenu(); 
+            }
+        }
+
+        private void ResetToMenu()
+        {
+            if (tlp != null)
+            {
+                this.Controls.Remove(tlp);
+                tlp.Dispose();
+                tlp = null;
+            }
+
+            if (timelbl != null)
+            {
+                this.Controls.Remove(timelbl);
+                timelbl.Dispose();
+                timelbl = null;
+            }
+
+            if (gametimer != null)
+            {
+                gametimer.Stop();
+                gametimer.Dispose();
+                gametimer = null;
+            }
+
+            if (hidetimer != null)
+            {
+                hidetimer.Stop();
+                hidetimer.Dispose();
+                hidetimer = null;
+            }
+
+            this.Width = 420;
+            this.Height = 200;
+
+            label.Visible = true;
+            rb1.Visible = true;
+            rb2.Visible = true;
+            rb3.Visible = true;
+            start_btn.Visible = true;
+            close_btn.Visible = true;
+
+            rb1.Checked = false;
+            rb2.Checked = false;
+            rb3.Checked = false;
+
+            icons = new List<string>()
+            {
+                "!", "!", "N", "N", ",", ",", "k", "k",
+                "b", "b", "v", "v", "w", "w", "z", "z"
+            };
+
+            fClicked = null;
+            sClicked = null;
+        }
+
+
     }
 }
