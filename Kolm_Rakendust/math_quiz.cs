@@ -42,7 +42,7 @@ namespace Kolm_Rakendust
 
             this.Text = "Matemaatiline äraarvamismäng";
             this.Width = 450;
-            this.Height = 400;
+            this.Height = 300;
 
             lbl = CreateLabel("Matemaatiline äraarvamismäng", new Point(60, 20), new Size(500, 30), new Font("Arial", 16));
 
