@@ -311,10 +311,49 @@ namespace Kolm_Rakendust
                 timer1.Stop();
                 time.Text = "Aeg on otsas!";
                 MessageBox.Show("Sa ei jõudnud õigeks ajaks valmis. Vabandust! \n Sa said: " + score + " punktid");
-                start_btn.Enabled = true;
-                start_btn.Visible = true;
+                this.Width = 450;
+                this.Height = 300;
+                nud1.Value = 0;
+                nud2.Value = 0;
+                nud3.Value = 0;
+                nud4.Value = 0;
+                score = 0;
+                time.Text = "30 seconds";
+
+                lblt.Visible = false;
+                time.Visible = false;
+                slbl.Visible = false;
+                slbl1.Visible = false;
+                s.Visible = false;
+                v1.Visible = false;
+                nud1.Visible = false;
+                rlbl.Visible = false;
+                rlbl1.Visible = false;
+                r.Visible = false;
+                v2.Visible = false;
+                nud2.Visible = false;
+                ulbl.Visible = false;
+                ulbl1.Visible = false;
+                u.Visible = false;
+                v3.Visible = false;
+                nud3.Visible = false;
+                dlbl.Visible = false;
+                dlbl1.Visible = false;
+                d.Visible = false;
+                v4.Visible = false;
+                nud4.Visible = false;
                 end_btn.Visible = false;
+
+                cb1.Visible = true;
+                cb1.Checked = false;
+                cb2.Checked = false;
+                cb2.Visible = true;
+                cb3.Checked = false;
+                cb3.Visible = true;
+                start_btn.Visible = true;
+                start_btn.Enabled = true;
                 btn.Visible = true;
+
             }
             if (t <= 5)
             {
